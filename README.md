@@ -21,7 +21,8 @@ Step 3: Compile and execute and verify output
 
 ### Unnamed Pipe Output
 
-![Unnamed Pipe Output](unnamed_output.png)
+<img width="603" height="239" alt="image" src="https://github.com/user-attachments/assets/4117ad5f-6e1d-4128-84fb-fe7b6629d2c8" />
+
 
 ---
 

@@ -19,7 +19,74 @@ Step 3: Compile and execute and verify output
 
 ## PROGRAM
 
+```c
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/types.h> 
+#include<sys/stat.h> 
+#include<string.h> 
+#include<fcntl.h> 
+#include<unistd.h>
+#include<sys/wait.h>
+void server(int,int); 
+void client(int,int); 
+int main() 
+{ 
+int p1[2],p2[2],pid, *waits; 
+pipe(p1); 
+pipe(p2); 
+pid=fork(); 
+if(pid==0) { 
+close(p1[1]); 
+close(p2[0]); 
+server(p1[0],p2[1]); return 0;
+ } 
+close(p1[0]); 
+close(p2[1]); 
+client(p1[1],p2[0]); 
+wait(waits); 
+return 0; 
+} 
+
+void server(int rfd,int wfd) 
+{ 
+int i,j,n; 
+char fname[2000]; 
+char buff[2000];
+n=read(rfd,fname,2000);
+fname[n]='\0';
+int fd=open(fname,O_RDONLY);
+sleep(10); 
+if(fd<0) 
+write(wfd,"can't open",9); 
+else 
+n=read(fd,buff,2000); 
+write(wfd,buff,n); 
+}
+void client(int wfd,int rfd) {
+int i,j,n; char fname[2000];
+char buff[2000];
+printf("ENTER THE FILE NAME :");
+scanf("%s",fname);
+printf("CLIENT SENDING THE REQUEST .... PLEASE WAIT\n");
+sleep(10);
+write(wfd,fname,2000);
+n=read(rfd,buff,2000);
+buff[n]='\0';
+printf("THE RESULTS OF CLIENTS ARE ...... \n"); write(1,buff,n);
+}
 ```
+
+### Unnamed Pipe Output
+
+![Alt text](img/pipe1.png)
+
+
+---
+
+### PROGRAM
+
+```c
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -60,14 +127,12 @@ void server() {
     ssize_t bytes_read;
 
     file_fd = open(FILE_NAME, O_RDONLY);
-
     if (file_fd == -1) {
         perror("Error opening hello.txt");
         exit(EXIT_FAILURE);
     }
 
     fifo_fd = open(FIFO_FILE, O_WRONLY);
-
     if (fifo_fd == -1) {
         perror("Error opening FIFO");
         exit(EXIT_FAILURE);
@@ -87,7 +152,6 @@ void client() {
     ssize_t bytes_read;
 
     fifo_fd = open(FIFO_FILE, O_RDONLY);
-
     if (fifo_fd == -1) {
         perror("Error opening FIFO");
         exit(EXIT_FAILURE);
@@ -102,97 +166,12 @@ void client() {
 
 ```
 
-### Unnamed Pipe Output
-
-<img width="603" height="239" alt="image" src="https://github.com/user-attachments/assets/4117ad5f-6e1d-4128-84fb-fe7b6629d2c8" />
-
-
----
-
-### PROGRAM
-
-```
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/wait.h>
-
-void server(int, int);
-void client(int, int);
-
-int main() {
-    int p1[2], p2[2], pid;
-
-    pipe(p1);
-    pipe(p2);
-
-    pid = fork();
-
-    if (pid == 0) {
-        close(p1[1]);
-        close(p2[0]);
-
-        server(p1[0], p2[1]);
-        exit(0);
-    }
-
-    close(p1[0]);
-    close(p2[1]);
-
-    client(p1[1], p2[0]);
-
-    wait(NULL);
-
-    return 0;
-}
-
-void server(int rfd, int wfd) {
-    int n;
-    char fname[2000];
-    char buff[2000];
-
-    n = read(rfd, fname, 2000);
-    fname[n] = '\0';
-
-    int fd = open(fname, O_RDONLY);
-
-    if (fd < 0) {
-        write(wfd, "can't open", 10);
-    } else {
-        n = read(fd, buff, 2000);
-        write(wfd, buff, n);
-        close(fd);
-    }
-}
-
-void client(int wfd, int rfd) {
-    int n;
-    char fname[2000];
-    char buff[2000];
-
-    printf("Enter file name: ");
-    scanf("%s", fname);
-
-    write(wfd, fname, 2000);
-
-    n = read(rfd, buff, 2000);
-    buff[n] = '\0';
-
-    printf("\nFile Content:\n");
-    write(1, buff, n);
-}
-
-```
-
 
 
 ### Named Pipe Output
+!
+[Alt text](img/namedpipe.png)
 
-![Named Pipe Output](named_output.png)
 
 ---
 

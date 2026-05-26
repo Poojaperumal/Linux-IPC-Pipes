@@ -1,4 +1,4 @@
-// C Program that illust#include<stdio.h>
+#include<stdio.h>
 #include<stdlib.h>
 #include<sys/types.h> 
 #include<sys/stat.h> 
@@ -52,4 +52,4 @@ write(wfd,fname,2000);
 n=read(rfd,buff,2000);
 buff[n]='\0';
 printf("THE RESULTS OF CLIENTS ARE ...... \n"); write(1,buff,n);
-}rate communication between two process using unnamed pipes
+}

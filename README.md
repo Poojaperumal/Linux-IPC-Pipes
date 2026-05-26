@@ -169,8 +169,7 @@ void client() {
 
 
 ### Named Pipe Output
-!
-[Alt text](img/namedpipe.png)
+ ![Alt text](img/namedpipe.png)
 
 
 ---
